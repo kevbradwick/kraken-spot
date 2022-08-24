@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "]"
+version = "0.1.0"
+description = "A zero dependency library for interacting with the Kraken Spot API"
+authors = ["Kevin Bradwick <kevinbradwick@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+black = "^22.6.0"
+isort = "^5.10.1"
+coverage = {extras = ["toml"], version = "^6.4.4"}
+autoflake = "^1.4"
+
+[tool.black]
+line-length = 88
+target-version = ["py37"]
+# extend-exclude = '''
+# /(
+#   ^/cashh/settings.py
+#   | ^/cashh/asgi.py
+#   | ^/cashh/wsgi.py
+#   | ^.*\b(migrations)\b.*$
+# )/
+# '''
+
+[tool.coverage.run]
+source_pkgs = ['kraken_spot']
+# omit = [
+#     "*/migrations/*",
+#     "*/tests/*",
+#     "*/wsgi.py",
+#     "*/asgi.py"
+# ]
+
+[tool.coverage.html]
+title = "Kraken Spot Coverage"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
