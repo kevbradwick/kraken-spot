@@ -12,4 +12,4 @@ before_install:
 
 script:
   - poetry install
-  - poetry run pytest
+  - poetry run python -m pytest

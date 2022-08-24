@@ -5,7 +5,7 @@ clean:
 .PHONY: test
 test: clean
 ifndef COVERAGE
-	poetry run pytest
+	poetry run python -m pytest
 else
 	poetry run coverage run -m pytest
 	poetry run coverage html
