@@ -7,4 +7,5 @@ if __name__ == "__main__":
         api_key=os.environ["KRAKEN_API_KEY"],
         private_key=os.environ["KRAKEN_PRIVATE_KEY"],
     )
-    print(client.trade_balance("ZUSD"))
+    # print(client.get_asset_info("BTC,ETH"))
+    print(client.account_balance())
