@@ -1,9 +1,21 @@
 [tool.poetry]
-name = "]"
-version = "0.1.0"
+name = "kraken-spot"
+version = "0.0.1"
 description = "A zero dependency library for interacting with the Kraken Spot API"
 authors = ["Kevin Bradwick <kevinbradwick@gmail.com>"]
 license = "MIT"
+
+[tool.bumpver]
+current_version = "0.0.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "Bump version {old_version} -> {new_version}"
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"kraken_spot/__init__.py" = ["{version}"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -15,6 +27,7 @@ black = "^22.6.0"
 isort = "^5.10.1"
 coverage = {extras = ["toml"], version = "^6.4.4"}
 autoflake = "^1.4"
+bumpver = "^2022.1118"
 
 [tool.black]
 line-length = 88
