@@ -6,6 +6,10 @@ A Python library for interacting with the [Kraken Spot REST API](https://docs.kr
 
 ## Quick Start
 
+Install from source of via `pip`
+
+    pip install kraken-spot
+
 ```python
 from kraken_spot import DefaultClient
 
