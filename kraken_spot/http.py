@@ -35,9 +35,23 @@ def http_post(
     body: Optional[Dict[str, Any]] = None,
     headers: Optional[Dict[str, str]] = None,
 ) -> HTTPResponse:
+    if not headers:
+        headers = {}
+    headers["User-Agent"] = USER_AGENT
     r = requests.post(url, headers=headers, data=body)
-    print(url)
     return HTTPResponse(
         status_code=r.status_code,
         body=r.json(),
     )
+
+
+def clean_params(params: Dict[str, Any]) -> Dict[str, Any]:
+    out = {}
+    for key, value in params.items():
+        if value == True:
+            out[key] = "true"
+        elif value == False:
+            out[key] = "false"
+        elif value != None:
+            out[key] = str(value)
+    return out

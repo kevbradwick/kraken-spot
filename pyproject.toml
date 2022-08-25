@@ -19,26 +19,17 @@ autoflake = "^1.4"
 [tool.black]
 line-length = 88
 target-version = ["py37"]
-# extend-exclude = '''
-# /(
-#   ^/cashh/settings.py
-#   | ^/cashh/asgi.py
-#   | ^/cashh/wsgi.py
-#   | ^.*\b(migrations)\b.*$
-# )/
-# '''
 
 [tool.coverage.run]
 source_pkgs = ['kraken_spot']
-# omit = [
-#     "*/migrations/*",
-#     "*/tests/*",
-#     "*/wsgi.py",
-#     "*/asgi.py"
-# ]
 
 [tool.coverage.html]
 title = "Kraken Spot Coverage"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: runs integration tests (deselect with '-m \"not integration\""
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

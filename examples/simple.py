@@ -1,11 +1,12 @@
 import os
 
-from kraken_spot.client import Client
+from kraken_spot import DefaultClient
 
 if __name__ == "__main__":
-    client = Client(
-        api_key=os.environ["KRAKEN_API_KEY"],
-        private_key=os.environ["KRAKEN_PRIVATE_KEY"],
-    )
-    # print(client.get_asset_info("BTC,ETH"))
-    print(client.account_balance())
+    client = DefaultClient()
+
+    # public endpoints don't require authentication
+    print(client.get_server_time())
+
+    # private endpoints need valid api keys with the appropriate permissions
+    print(client.get_account_balance())

@@ -1,13 +1,13 @@
 .PHONY: clean
 clean:
-	rm -rf htmlcov .coverage
+	rm -rf htmlcov .coverage .pytest_cache
 
 .PHONY: test
 test: clean
 ifndef COVERAGE
-	poetry run python -m pytest
+	poetry run python -m pytest -m "not integration"
 else
-	poetry run coverage run -m pytest
+	poetry run coverage run -m pytest -m "not integration"
 	poetry run coverage html
 	@echo "=============================================================================="
 	@echo "||                                                                          ||"
@@ -19,6 +19,10 @@ endif
 
 .PHONY: t
 t: test
+
+.PHONY: test-integration
+test-integration:
+	poetry run python -m pytest -m integration
 
 .PHONY: fmt
 fmt:
