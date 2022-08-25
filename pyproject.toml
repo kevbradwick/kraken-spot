@@ -1,9 +1,14 @@
 [tool.poetry]
 name = "kraken-spot"
 version = "0.1.0"
-description = "A zero dependency library for interacting with the Kraken Spot API"
+description = "A library for interacting with the Kraken Spot API"
 authors = ["Kevin Bradwick <kevinbradwick@gmail.com>"]
 license = "MIT"
+keywords = ["kraken", "crypto"]
+readme = "README.md"
+homepage = "https://github.com/kevbradwick/kraken-spot"
+repository = "https://github.com/kevbradwick/kraken-spot"
+include = ["LICENSE"]
 
 [tool.bumpver]
 current_version = "0.1.0"
