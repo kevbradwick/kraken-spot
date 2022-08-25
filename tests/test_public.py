@@ -53,64 +53,64 @@ class TestPublicEndpoints:
     def test_get_server_time(self, mock_get):
         self.client.get_server_time()
 
-        assert "https://api.kraken.com/0/public/Time" == mock_get.call_args.args[0]
+        assert "https://api.kraken.com/0/public/Time" == mock_get.call_args[0][0]
 
     @patch("kraken_spot.public.http_get")
     def test_get_system_status(self, mock_get):
         self.client.get_system_status()
 
         assert (
-            "https://api.kraken.com/0/public/SystemStatus" == mock_get.call_args.args[0]
+            "https://api.kraken.com/0/public/SystemStatus" == mock_get.call_args[0][0]
         )
 
     @patch("kraken_spot.public.http_get")
     def test_get_asset_info(self, mock_get):
         self.client.get_asset_info("BTC", "currency")
 
-        assert "https://api.kraken.com/0/public/Assets" == mock_get.call_args.args[0]
-        assert "BTC" == mock_get.call_args.args[1]["asset"]
-        assert "currency" == mock_get.call_args.args[1]["aclass"]
+        assert "https://api.kraken.com/0/public/Assets" == mock_get.call_args[0][0]
+        assert "BTC" == mock_get.call_args[0][1]["asset"]
+        assert "currency" == mock_get.call_args[0][1]["aclass"]
 
     @patch("kraken_spot.public.http_get")
     def test_get_tradable_asset_pairs(self, mock_get):
         self.client.get_tradable_asset_pairs("BTC")
 
         assert (
-            "https://api.kraken.com/0/public/AssetPairs" == mock_get.call_args.args[0]
+            "https://api.kraken.com/0/public/AssetPairs" == mock_get.call_args[0][0]
         )
-        assert "BTC" == mock_get.call_args.args[1]["pair"]
+        assert "BTC" == mock_get.call_args[0][1]["pair"]
 
     @patch("kraken_spot.public.http_get")
     def test_get_ticker_information(self, mock_get):
         self.client.get_ticker_information("BTC")
 
-        assert "https://api.kraken.com/0/public/Ticker" == mock_get.call_args.args[0]
-        assert "BTC" == mock_get.call_args.args[1]["pair"]
+        assert "https://api.kraken.com/0/public/Ticker" == mock_get.call_args[0][0]
+        assert "BTC" == mock_get.call_args[0][1]["pair"]
 
     @patch("kraken_spot.public.http_get")
     def test_get_ohlc_data(self, mock_get):
         self.client.get_ohlc_data("BTC")
 
-        assert "https://api.kraken.com/0/public/OHLC" == mock_get.call_args.args[0]
-        assert "BTC" == mock_get.call_args.args[1]["pair"]
+        assert "https://api.kraken.com/0/public/OHLC" == mock_get.call_args[0][0]
+        assert "BTC" == mock_get.call_args[0][1]["pair"]
 
     @patch("kraken_spot.public.http_get")
     def test_get_order_book(self, mock_get):
         self.client.get_order_book("BTC")
 
-        assert "https://api.kraken.com/0/public/Depth" == mock_get.call_args.args[0]
-        assert "BTC" == mock_get.call_args.args[1]["pair"]
+        assert "https://api.kraken.com/0/public/Depth" == mock_get.call_args[0][0]
+        assert "BTC" == mock_get.call_args[0][1]["pair"]
 
     @patch("kraken_spot.public.http_get")
     def test_get_recent_trades(self, mock_get):
         self.client.get_recent_trades("BTC")
 
-        assert "https://api.kraken.com/0/public/Trades" == mock_get.call_args.args[0]
-        assert "BTC" == mock_get.call_args.args[1]["pair"]
+        assert "https://api.kraken.com/0/public/Trades" == mock_get.call_args[0][0]
+        assert "BTC" == mock_get.call_args[0][1]["pair"]
 
     @patch("kraken_spot.public.http_get")
     def test_get_recent_spreads(self, mock_get):
         self.client.get_recent_spreads("BTC")
 
-        assert "https://api.kraken.com/0/public/Spread" == mock_get.call_args.args[0]
-        assert "BTC" == mock_get.call_args.args[1]["pair"]
+        assert "https://api.kraken.com/0/public/Spread" == mock_get.call_args[0][0]
+        assert "BTC" == mock_get.call_args[0][1]["pair"]

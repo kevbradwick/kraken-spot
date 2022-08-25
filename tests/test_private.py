@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 from kraken_spot.client import Client
 from kraken_spot.errors import AuthError
-from kraken_spot.http import KrakenResponse
 
 
 class TestPrivateEndpoints:
@@ -24,17 +23,17 @@ class TestPrivateEndpoints:
     @patch("kraken_spot.private.http_post")
     def test_base_url_is_correct(self, post_mock):
         self.client.get_account_balance()
-        assert post_mock.call_args.args[0] == "https://api.kraken.com/0/private/Balance"
+        assert post_mock.call_args[0][0] == "https://api.kraken.com/0/private/Balance"
 
     @patch("kraken_spot.private.http_post")
     def test_nonce_is_added_to_every_request(self, post_mock):
         self.client.get_account_balance()
-        assert "nonce" in post_mock.call_args.args[1]
+        assert "nonce" in post_mock.call_args[0][1]
 
     @patch("kraken_spot.private.http_post")
     def test_correct_headers_for_every_request(self, post_mock):
         self.client.get_account_balance()
-        headers = post_mock.call_args.args[2]
+        headers = post_mock.call_args[0][2]
 
         assert "application/x-www-form-urlencoded" == headers["Content-Type"]
         assert self.client.api_key == headers["API-Key"]
@@ -45,4 +44,4 @@ class TestPrivateEndpoints:
         asset = "BTC"
         self.client.get_trade_balance(asset)
 
-        assert asset == post_mock.call_args.args[1]["asset"]
+        assert asset == post_mock.call_args[0][1]["asset"]
