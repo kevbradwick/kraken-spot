@@ -21,7 +21,14 @@ The default client will attempt to configure the client with api keys from envir
 
 ## OTP Authentication
 
-At the moment, one time password (OTP) is not currently supported in this client for API keys that have 2FA enabled.
+If the API key has 2FA enabled, you will need to provide a one time password with your call.
+
+```python
+client.set_otp(123456)
+client.get_account_valance()
+```
+
+The OTP is reset after each request.
 
 ## Features
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 from unittest.mock import patch
 
 from kraken_spot.client import Client
@@ -12,6 +12,10 @@ def _assert_operation(post_mock, operation):
 def _assert_body_params_absent(post_mock, param_names: List[str]):
     for name in param_names:
         assert name not in post_mock.call_args[0][1]
+
+
+def _assert_body_param(post_mock, name: str, value: Any):
+    assert post_mock.call_args[0][1][name] == value
 
 
 def _assert_body_params_present(post_mock, param_names: List[str]):
@@ -34,6 +38,22 @@ class TestPrivateEndpoints:
             assert False
         except AuthError:
             assert True
+
+    @patch("kraken_spot.private.http_post")
+    def test_otp_is_sent_and_code_is_reset(self, post_mock):
+        """
+        A OTP is set once, used on the next request and then removed afterwards
+        """
+        self.client.get_account_balance()
+        _assert_body_params_absent(post_mock, ["otp"])
+
+        self.client.set_otp(1234)
+        self.client.get_account_balance()
+        _assert_body_param(post_mock, "otp", "1234")
+
+        # should now be reset
+        self.client.get_account_balance()
+        _assert_body_params_absent(post_mock, ["otp"])
 
     @patch("kraken_spot.private.http_post")
     def test_base_url_is_correct(self, post_mock):

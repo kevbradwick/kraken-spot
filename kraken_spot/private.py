@@ -10,6 +10,8 @@ class PrivateEndpoints:
     PrivateEndpoints is a mixin to be used on the Client class
     """
 
+    _otp: Optional[int]
+
     def _authorised_query(
         self, url_path: str, body: Optional[Dict] = None
     ) -> KrakenResponse:
@@ -31,6 +33,11 @@ class PrivateEndpoints:
 
         full_url_path = f"/{api_version}/private/{url_path}"
         default_data = {"nonce": generate_nonce()}
+
+        # set one time password for this request
+        if hasattr(self, "_otp") and self._otp:
+            default_data["otp"] = self._otp
+
         body = body or {}
         body = clean_params({**body, **default_data})
         headers = {
@@ -40,7 +47,15 @@ class PrivateEndpoints:
         }
         url = f"{endpoint}{full_url_path}"
         resp = http_post(url, body, headers)
+
+        # reset otp
+        if hasattr(self, "_otp"):
+            self._otp = None
+
         return KrakenResponse(resp.body.get("result", {}), resp.body.get("error", {}))
+
+    def set_otp(self, otp: int):
+        self._otp = otp
 
     def get_account_balance(self) -> KrakenResponse:
         """
