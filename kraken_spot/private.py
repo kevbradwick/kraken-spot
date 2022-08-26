@@ -365,3 +365,100 @@ class PrivateEndpoints:
         https://docs.kraken.com/rest/#tag/User-Trading/operation/cancelAllOrdersAfter
         """
         return self._authorised_query("CancelAllOrdersAfter", {"timeout": timeout})
+
+    # - User funding
+
+    def get_deposit_methods(self, asset: str) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/getDepositMethods
+        """
+        return self._authorised_query("DepositMethods", {"asset": asset})
+
+    def get_deposit_addresses(
+        self, asset: str, method: str, new: Optional[bool] = None
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/getDepositAddresses
+        """
+        return self._authorised_query(
+            "DepositAddresses",
+            {
+                "asset": asset,
+                "method": method,
+                "new": new,
+            },
+        )
+
+    def get_status_of_recent_deposits(
+        self, asset: str, method: Optional[str] = None
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/getStatusRecentDeposits
+        """
+        return self._authorised_query(
+            "DepositStatus", {"asset": asset, "method": method}
+        )
+
+    def get_withdrawal_information(
+        self, asset: str, key: str, amount: str
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/getWithdrawalInformation
+        """
+        return self._authorised_query(
+            "WithdrawInfo",
+            {
+                "asset": asset,
+                "key": key,
+                "amount": amount,
+            },
+        )
+
+    def withdrawal_funds(self, asset: str, key: str, amount: str) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/withdrawFunds
+        """
+        return self._authorised_query(
+            "Withdraw",
+            {
+                "asset": asset,
+                "key": key,
+                "amount": amount,
+            },
+        )
+
+    def get_status_of_recent_withdrawal(
+        self, asset: str, method: Optional[str] = None
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/getStatusRecentWithdrawals
+        """
+        return self._authorised_query(
+            "WithdrawStatus", {"asset": asset, "method": method}
+        )
+
+    def request_withdrawal_cancellation(
+        self, asset: str, ref_id: str
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/cancelWithdrawal
+        """
+        return self._authorised_query(
+            "WithdrawCancel", {"asset": asset, "refid": ref_id}
+        )
+
+    def request_wallet_transfer(
+        self, asset: str, address_from: str, address_to: str, amount: str
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Funding/operation/walletTransfer
+        """
+        return self._authorised_query(
+            "WalletTransfer",
+            {
+                "asset": asset,
+                "from": address_from,
+                "to": address_to,
+                "amount": amount,
+            },
+        )
