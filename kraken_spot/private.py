@@ -462,3 +462,41 @@ class PrivateEndpoints:
                 "amount": amount,
             },
         )
+
+    def stake_asset(self, asset: str, amount: str, method: str) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Staking/operation/stake
+        """
+        return self._authorised_query(
+            "Stake", {"asset": asset, "amount": amount, "method": method}
+        )
+
+    def unstake_asset(self, asset: str, amount: str) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Staking/operation/unstake
+        """
+        return self._authorised_query("Unstake", {"asset": asset, "amount": amount})
+
+    def list_stakeable_assets(self) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Staking/operation/getStakingAssetInfo
+        """
+        return self._authorised_query("Staking/Assets")
+
+    def get_pending_staking_transactions(self) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Staking/operation/getStakingAssetInfo
+        """
+        return self._authorised_query("Staking/Pending")
+
+    def list_of_staking_transactions(self) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Staking/operation/getStakingAssetInfo
+        """
+        return self._authorised_query("Staking/Transactions")
+
+    def get_websockets_token(self):
+        """
+        https://docs.kraken.com/rest/#tag/Websockets-Authentication/operation/getWebsocketsToken
+        """
+        return self._authorised_query("GetWebSocketsToken")
