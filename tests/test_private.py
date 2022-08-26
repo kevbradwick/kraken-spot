@@ -1,7 +1,22 @@
+from typing import List
 from unittest.mock import patch
 
 from kraken_spot.client import Client
 from kraken_spot.errors import AuthError
+
+
+def _assert_operation(post_mock, operation):
+    assert post_mock.call_args[0][0].endswith(operation)
+
+
+def _assert_body_params_absent(post_mock, param_names: List[str]):
+    for name in param_names:
+        assert name not in post_mock.call_args[0][1]
+
+
+def _assert_body_params_present(post_mock, param_names: List[str]):
+    for name in param_names:
+        assert name in post_mock.call_args[0][1]
 
 
 class TestPrivateEndpoints:
@@ -44,4 +59,325 @@ class TestPrivateEndpoints:
         asset = "BTC"
         self.client.get_trade_balance(asset)
 
+        _assert_operation(post_mock, "TradeBalance")
         assert asset == post_mock.call_args[0][1]["asset"]
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_open_orders(self, post_mock):
+        # with defaults
+        self.client.get_open_orders()
+        _assert_operation(post_mock, "OpenOrders")
+        _assert_body_params_absent(post_mock, ["trades", "userref"])
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_open_orders(trades=True, user_ref=123)
+        _assert_body_params_present(post_mock, ["trades", "userref", "nonce"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_closed_orders(self, post_mock):
+        # with defaults
+        self.client.get_closed_orders()
+        _assert_operation(post_mock, "ClosedOrders")
+        _assert_body_params_absent(
+            post_mock, ["trades", "userref", "start", "end", "ofs", "closetime"]
+        )
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_closed_orders(
+            trades=True, user_ref=123, start=1, end=1, ofs=1, close_time="1"
+        )
+        _assert_body_params_present(
+            post_mock,
+            ["trades", "userref", "start", "end", "ofs", "closetime", "nonce"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_query_orders_info(self, post_mock):
+        # with defaults
+        self.client.query_orders_info(tx_id="123")
+        _assert_operation(post_mock, "QueryOrders")
+        _assert_body_params_absent(post_mock, ["trades", "userref"])
+        _assert_body_params_present(post_mock, ["nonce", "txid"])
+
+        # with params
+        self.client.query_orders_info(tx_id="123", trades=True, user_ref=12)
+        _assert_body_params_present(
+            post_mock,
+            ["trades", "userref", "txid", "nonce"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_trades_history(self, post_mock):
+        # with defaults
+        self.client.get_trades_history()
+        _assert_operation(post_mock, "TradeHistory")
+        _assert_body_params_absent(post_mock, ["trades", "type", "start", "end", "ofs"])
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_trades_history(
+            trade_type="sd", trades=True, start=1, end=1, ofs=1
+        )
+        _assert_body_params_present(
+            post_mock,
+            ["trades", "nonce", "type", "start", "end", "ofs"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_trades_info(self, post_mock):
+        # with defaults
+        self.client.get_trades_info()
+        _assert_operation(post_mock, "QueryTrades")
+        _assert_body_params_absent(post_mock, ["trades", "txid"])
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_trades_info(tx_id="sd", trades=True)
+        _assert_body_params_present(
+            post_mock,
+            ["trades", "nonce", "txid"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_open_trades(self, post_mock):
+        # with defaults
+        self.client.get_open_trades()
+        _assert_operation(post_mock, "OpenPositions")
+        _assert_body_params_absent(post_mock, ["consolidation", "txid", "docalcs"])
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_open_trades(tx_id="sd", consolidation="1", do_calc=True)
+        _assert_body_params_present(
+            post_mock,
+            ["consolidation", "nonce", "txid", "docalcs"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_ledgers(self, post_mock):
+        # with defaults
+        self.client.get_ledgers()
+        _assert_operation(post_mock, "Ledgers")
+        _assert_body_params_absent(
+            post_mock, ["asset", "aclass", "type", "start", "end", "ofs"]
+        )
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_ledgers(asset="", a_class="", type="", start=1, end=1, ofs=1)
+        _assert_body_params_present(
+            post_mock,
+            ["asset", "aclass", "type", "start", "end", "ofs", "nonce"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_query_ledgers(self, post_mock):
+        # with defaults
+        self.client.query_ledgers()
+        _assert_operation(post_mock, "QueryLedgers")
+        _assert_body_params_absent(post_mock, ["id", "trades"])
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.query_ledgers(ledger_id="", trades=False)
+        _assert_body_params_present(
+            post_mock,
+            ["nonce", "id", "trades"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_trade_volume(self, post_mock):
+        # with defaults
+        self.client.get_trade_volume()
+        _assert_operation(post_mock, "TradeVolume")
+        _assert_body_params_absent(post_mock, ["pair", "fee-info"])
+        _assert_body_params_present(post_mock, ["nonce"])
+
+        # with params
+        self.client.get_trade_volume(pair="", fee_info=True)
+        _assert_body_params_present(
+            post_mock,
+            ["nonce", "pair", "fee-info"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_request_export_report(self, post_mock):
+        # with defaults
+        self.client.request_export_report(report="", description="")
+        _assert_operation(post_mock, "AddExport")
+        _assert_body_params_absent(post_mock, ["format", "fields", "starttm", "endtm"])
+        _assert_body_params_present(post_mock, ["nonce", "report", "description"])
+
+        # with params
+        self.client.request_export_report(
+            report="", description="", format="", fields="", start_tm=1, end_tm=1
+        )
+        _assert_body_params_present(
+            post_mock,
+            ["nonce", "report", "description", "format", "fields", "starttm", "endtm"],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_export_status(self, post_mock):
+        # with defaults
+        self.client.get_export_status(report="")
+        _assert_operation(post_mock, "ExportStatus")
+        _assert_body_params_present(post_mock, ["nonce", "report"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_retrieve_data_export(self, post_mock):
+        # with defaults
+        self.client.retrieve_data_export(report_id="")
+        _assert_operation(post_mock, "RetrieveExport")
+        _assert_body_params_present(post_mock, ["nonce", "id"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_delete_export_report(self, post_mock):
+        # with defaults
+        self.client.delete_export_report(report_id="", report_type="")
+        _assert_operation(post_mock, "RemoveExport")
+        _assert_body_params_present(post_mock, ["nonce", "id", "type"])
+
+    # - User Trading
+
+    @patch("kraken_spot.private.http_post")
+    def test_add_order(self, post_mock):
+        self.client.add_order(order_type="", direction="", volume="", pair="")
+        _assert_operation(post_mock, "AddOrder")
+        _assert_body_params_present(
+            post_mock, ["ordertype", "type", "volume", "pair", "nonce"]
+        )
+        _assert_body_params_absent(
+            post_mock,
+            [
+                "userref",
+                "price",
+                "price2",
+                "trigger",
+                "leverage",
+                "stp_type",
+                "oflags",
+                "timeinforce",
+                "starttm",
+                "expiretm",
+                "close[ordertype]",
+                "close[price]",
+                "close[price2]",
+                "deadline",
+                "validate",
+            ],
+        )
+
+        self.client.add_order(
+            order_type="",
+            direction="",
+            volume="",
+            pair="",
+            user_ref="",
+            price_1="",
+            price_2="",
+            trigger="",
+            leverage="",
+            stp_type="",
+            o_flags="",
+            time_in_force="",
+            start_time="",
+            expire_time="",
+            close_order_type="",
+            close_price="",
+            close_price_2="",
+            deadline="",
+            validate=True,
+        )
+
+        _assert_body_params_present(
+            post_mock,
+            [
+                "ordertype",
+                "type",
+                "volume",
+                "pair",
+                "nonce",
+                "userref",
+                "price",
+                "price2",
+                "trigger",
+                "leverage",
+                "stp_type",
+                "oflags",
+                "timeinforce",
+                "starttm",
+                "expiretm",
+                "close[ordertype]",
+                "close[price]",
+                "close[price2]",
+                "deadline",
+                "validate",
+            ],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_edit_order(self, post_mock):
+        self.client.edit_order(tx_id="", pair="")
+        _assert_operation(post_mock, "EditOrder")
+        _assert_body_params_present(post_mock, ["txid", "pair", "nonce"])
+        _assert_body_params_absent(
+            post_mock,
+            [
+                "volume",
+                "price",
+                "price2",
+                "oflags",
+                "deadline",
+                "cancel_response",
+                "validate",
+            ],
+        )
+
+        self.client.edit_order(
+            tx_id="",
+            pair="",
+            user_ref=1,
+            volume="",
+            price="",
+            price_2="",
+            o_flags="",
+            deadline="",
+            cancel_response=True,
+            validate=True,
+        )
+        _assert_body_params_present(
+            post_mock,
+            [
+                "txid",
+                "pair",
+                "nonce",
+                "volume",
+                "price",
+                "price2",
+                "oflags",
+                "deadline",
+                "cancel_response",
+                "validate",
+            ],
+        )
+
+    @patch("kraken_spot.private.http_post")
+    def test_cancel_order(self, post_mock):
+        self.client.cancel_order(tx_id="1")
+        _assert_operation(post_mock, "CancelOrder")
+        _assert_body_params_present(post_mock, ["txid", "nonce"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_cancel_all_orders(self, post_mock):
+        self.client.cancel_all_orders()
+        _assert_operation(post_mock, "CancelAll")
+        _assert_body_params_present(post_mock, ["nonce"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_cancel_all_orders_after_timeout(self, post_mock):
+        self.client.cancel_all_orders_after_timeout(10)
+        _assert_operation(post_mock, "CancelAllOrdersAfter")
+        _assert_body_params_present(post_mock, ["nonce", "timeout"])

@@ -75,9 +75,7 @@ class TestPublicEndpoints:
     def test_get_tradable_asset_pairs(self, mock_get):
         self.client.get_tradable_asset_pairs("BTC")
 
-        assert (
-            "https://api.kraken.com/0/public/AssetPairs" == mock_get.call_args[0][0]
-        )
+        assert "https://api.kraken.com/0/public/AssetPairs" == mock_get.call_args[0][0]
         assert "BTC" == mock_get.call_args[0][1]["pair"]
 
     @patch("kraken_spot.public.http_get")
