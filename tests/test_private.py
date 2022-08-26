@@ -401,3 +401,69 @@ class TestPrivateEndpoints:
         self.client.cancel_all_orders_after_timeout(10)
         _assert_operation(post_mock, "CancelAllOrdersAfter")
         _assert_body_params_present(post_mock, ["nonce", "timeout"])
+
+    # - User funding
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_deposit_methods(self, post_mock):
+        self.client.get_deposit_methods(asset="")
+        _assert_operation(post_mock, "DepositMethods")
+        _assert_body_params_present(post_mock, ["nonce", "asset"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_deposit_addresses(self, post_mock):
+        self.client.get_deposit_addresses(asset="", method="")
+        _assert_operation(post_mock, "DepositAddresses")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "method"])
+        _assert_body_params_absent(post_mock, ["new"])
+
+        self.client.get_deposit_addresses(asset="", method="", new=False)
+        _assert_body_params_present(post_mock, ["nonce", "asset", "method", "new"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_status_of_recent_deposits(self, post_mock):
+        self.client.get_status_of_recent_deposits(asset="")
+        _assert_operation(post_mock, "DepositStatus")
+        _assert_body_params_present(post_mock, ["nonce", "asset"])
+        _assert_body_params_absent(post_mock, ["method"])
+
+        self.client.get_status_of_recent_deposits(asset="", method="")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "method"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_withdrawal_information(self, post_mock):
+        self.client.get_withdrawal_information(asset="", key="", amount="")
+        _assert_operation(post_mock, "WithdrawInfo")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "key", "amount"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_withdrawal_funds(self, post_mock):
+        self.client.withdrawal_funds(asset="", key="", amount="")
+        _assert_operation(post_mock, "Withdraw")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "key", "amount"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_status_of_recent_withdrawal(self, post_mock):
+        self.client.get_status_of_recent_withdrawal(asset="")
+        _assert_operation(post_mock, "WithdrawStatus")
+        _assert_body_params_present(post_mock, ["nonce", "asset"])
+        _assert_body_params_absent(post_mock, ["method"])
+
+        self.client.get_status_of_recent_withdrawal(asset="", method="")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "method"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_request_withdrawal_cancellation(self, post_mock):
+        self.client.request_withdrawal_cancellation(asset="", ref_id="")
+        _assert_operation(post_mock, "WithdrawCancel")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "refid"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_request_wallet_transfer(self, post_mock):
+        self.client.request_wallet_transfer(
+            asset="", address_from="", address_to="", amount=""
+        )
+        _assert_operation(post_mock, "WalletTransfer")
+        _assert_body_params_present(
+            post_mock, ["nonce", "asset", "from", "to", "amount"]
+        )

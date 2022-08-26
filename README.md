@@ -25,7 +25,7 @@ If the API key has 2FA enabled, you will need to provide a one time password wit
 
 ```python
 client.set_otp(123456)
-client.get_account_valance()
+client.get_account_balance()
 ```
 
 The OTP is reset after each request.
@@ -38,8 +38,6 @@ This library is currently in development so *should not* be used in production. 
 | ------ | ------- |
 | Market Data | ✅ |
 | User Data | ✅ |
-| User Trading | ✅ * |
-| User Funding | ❌ |
+| User Trading | ✅ (except batch orders) |
+| User Funding | ✅ |
 | User staking | ❌ |
-
-* Batch orders not implemented
