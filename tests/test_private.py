@@ -467,3 +467,43 @@ class TestPrivateEndpoints:
         _assert_body_params_present(
             post_mock, ["nonce", "asset", "from", "to", "amount"]
         )
+
+    # - User staking
+
+    @patch("kraken_spot.private.http_post")
+    def test_stake_asset(self, post_mock):
+        self.client.stake_asset(asset="", amount="", method="")
+        _assert_operation(post_mock, "Stake")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "method", "amount"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_unstake_asset(self, post_mock):
+        self.client.unstake_asset(asset="", amount="")
+        _assert_operation(post_mock, "Unstake")
+        _assert_body_params_present(post_mock, ["nonce", "asset", "amount"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_stakeable_assets(self, post_mock):
+        self.client.list_stakeable_assets()
+        _assert_operation(post_mock, "Staking/Assets")
+        _assert_body_params_present(post_mock, ["nonce"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_pending_staking_transactions(self, post_mock):
+        self.client.get_pending_staking_transactions()
+        _assert_operation(post_mock, "Staking/Pending")
+        _assert_body_params_present(post_mock, ["nonce"])
+
+    @patch("kraken_spot.private.http_post")
+    def test_list_of_staking_transactions(self, post_mock):
+        self.client.list_of_staking_transactions()
+        _assert_operation(post_mock, "Staking/Transactions")
+        _assert_body_params_present(post_mock, ["nonce"])
+
+    # - Websockets
+
+    @patch("kraken_spot.private.http_post")
+    def test_get_websockets_token(self, post_mock):
+        self.client.get_websockets_token()
+        _assert_operation(post_mock, "GetWebSocketsToken")
+        _assert_body_params_present(post_mock, ["nonce"])

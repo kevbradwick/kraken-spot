@@ -32,7 +32,7 @@ The OTP is reset after each request.
 
 ## Features
 
-This library is currently in development so *should not* be used in production. The following endpoints are currently supported;
+The following endpoints are currently supported;
 
 | Endpoint Set | Supported |
 | ------ | ------- |
@@ -40,4 +40,5 @@ This library is currently in development so *should not* be used in production. 
 | User Data | ✅ |
 | User Trading | ✅ (except batch orders) |
 | User Funding | ✅ |
-| User staking | ❌ |
+| User staking | ✅ |
+| Websocket Authentication | ✅ |
