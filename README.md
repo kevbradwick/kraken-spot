@@ -31,6 +31,8 @@ This library is currently in development so *should not* be used in production. 
 | ------ | ------- |
 | Market Data | ✅ |
 | User Data | ✅ |
-| User Trading | ❌ |
+| User Trading | ✅ * |
 | User Funding | ❌ |
 | User staking | ❌ |
+
+* Batch orders not implemented

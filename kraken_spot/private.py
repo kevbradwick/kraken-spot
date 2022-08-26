@@ -241,8 +241,112 @@ class PrivateEndpoints:
         """
         return self._authorised_query("RetrieveExport", {"id": report_id})
 
-    def delete_export_report(self, report_id: str, type: str) -> KrakenResponse:
+    def delete_export_report(self, report_id: str, report_type: str) -> KrakenResponse:
         """
         https://docs.kraken.com/rest/#tag/User-Data/operation/removeExport
         """
-        return self._authorised_query("RemoveExport", {"id": report_id, "type": type})
+        return self._authorised_query(
+            "RemoveExport", {"id": report_id, "type": report_type}
+        )
+
+    # - User Trading
+
+    def add_order(
+        self,
+        order_type: str,
+        direction: str,
+        volume: str,
+        pair: str,
+        price_1: Optional[str] = None,
+        price_2: Optional[str] = None,
+        trigger: Optional[str] = None,
+        leverage: Optional[str] = None,
+        stp_type: Optional[str] = None,
+        o_flags: Optional[str] = None,
+        time_in_force: Optional[str] = None,
+        start_time: Optional[str] = None,
+        expire_time: Optional[str] = None,
+        close_order_type: Optional[str] = None,
+        close_price: Optional[str] = None,
+        close_price_2: Optional[str] = None,
+        deadline: Optional[str] = None,
+        validate: Optional[bool] = None,
+        user_ref: Optional[str] = None,
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Trading/operation/addOrder
+        """
+        return self._authorised_query(
+            "AddOrder",
+            {
+                "userref": user_ref,
+                "ordertype": order_type,
+                "type": direction,
+                "volume": volume,
+                "pair": pair,
+                "price": price_1,
+                "price2": price_2,
+                "trigger": trigger,
+                "leverage": leverage,
+                "stp_type": stp_type,
+                "oflags": o_flags,
+                "timeinforce": time_in_force,
+                "starttm": start_time,
+                "expiretm": expire_time,
+                "close[ordertype]": close_order_type,
+                "close[price]": close_price,
+                "close[price2]": close_price_2,
+                "deadline": deadline,
+                "validate": validate,
+            },
+        )
+
+    def edit_order(
+        self,
+        tx_id: str,
+        pair: str,
+        user_ref: Optional[int] = None,
+        volume: Optional[str] = None,
+        price: Optional[str] = None,
+        price_2: Optional[str] = None,
+        o_flags: Optional[str] = None,
+        deadline: Optional[str] = None,
+        cancel_response: Optional[bool] = None,
+        validate: Optional[bool] = None,
+    ) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Trading/operation/editOrder
+        """
+        return self._authorised_query(
+            "EditOrder",
+            {
+                "userref": user_ref,
+                "txid": tx_id,
+                "volume": volume,
+                "pair": pair,
+                "price": price,
+                "price2": price_2,
+                "oflags": o_flags,
+                "deadline": deadline,
+                "cancel_response": cancel_response,
+                "validate": validate,
+            },
+        )
+
+    def cancel_order(self, tx_id: str) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Trading/operation/cancelOrder
+        """
+        return self._authorised_query("CancelOrder", {"txid": tx_id})
+
+    def cancel_all_orders(self) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Trading/operation/cancelAllOrders
+        """
+        return self._authorised_query("CancelAll")
+
+    def cancel_all_orders_after_timeout(self, timeout: int) -> KrakenResponse:
+        """
+        https://docs.kraken.com/rest/#tag/User-Trading/operation/cancelAllOrdersAfter
+        """
+        return self._authorised_query("CancelAllOrdersAfter", {"timeout": timeout})
