@@ -7,8 +7,7 @@ python:
   - "3.9"
   - "nightly"
 
-before_install:
-  - pip install virtualenv
+before_script:
   - pip install poetry
 
 install:
