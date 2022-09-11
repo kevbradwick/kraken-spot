@@ -7,13 +7,13 @@ python:
   - "3.7"
   - "3.8"
   - "3.9"
-  - "3.10-dev"
 
 before_install:
   - python -m pip install --upgrade pip
+  - curl -sSL https://install.python-poetry.org | python
 
 install:
-  - pip install --user -r travis-requirements.txt --use-feature=2020-resolver
+  - poetry install
 
 script:
-  - python -m pytest
+  - poetry run python -m pytest
