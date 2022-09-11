@@ -10,6 +10,8 @@ python:
 before_install:
   - pip install poetry
 
-script:
+install:
   - poetry install
+
+script:
   - poetry run python -m pytest
