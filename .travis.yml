@@ -9,10 +9,9 @@ python:
 
 before_install:
   - python -m pip install --upgrade pip
-  - curl -sSL https://install.python-poetry.org | python
 
 install:
-  - poetry install
+  - pip install --user -r travis-requirements.txt --use-feature=2020-resolver
 
 script:
-  - poetry run python -m pytest
+  - python -m pytest
